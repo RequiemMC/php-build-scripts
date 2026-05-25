@@ -49,6 +49,7 @@ EXT_VANILLAGENERATOR_VERSION="abd059fd2ca79888aab3b9c5070d83ceea55fada"
 # branch name (e.g. "master"), tag, or 40-char commit SHA — the build step
 # below switches between `git checkout` and tarball download accordingly.
 EXT_QUICHE_VERSION="master"
+EXT_MONGODB_VERSION="2.1.2"
 
 EXT_IGBINARY_VERSION_PHP85="3.2.17RC1"
 
@@ -1441,6 +1442,8 @@ write_out "PHP" "Downloading additional extensions..."
 
 get_github_extension "pmmpthread" "$EXT_PMMPTHREAD_VERSION" "larryTheCoder" "ext-pmmpthread"
 
+get_pecl_extension "mongodb" "$EXT_MONGODB_VERSION"
+
 get_github_extension "yaml" "$EXT_YAML_VERSION" "php" "pecl-file_formats-yaml"
 
 get_pecl_extension "yaml" "$EXT_YAML_VERSION"
@@ -1702,6 +1705,7 @@ $HAS_DEBUG \
 --disable-mbregex \
 --enable-calendar \
 --enable-pmmpthread \
+--enable-mongodb \
 --enable-fileinfo \
 --with-libxml \
 --enable-xml \
