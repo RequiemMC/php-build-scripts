@@ -84,50 +84,9 @@ jobs:
             workspace.tar.gz
           if-no-files-found: error
 
-  windows:
-    name: Windows
-    runs-on: windows-2022
-
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Prepare download cache
-        id: download-cache
-        uses: actions/cache@v4
-        with:
-          path: ./download_cache
-          key: windows-cache-${{ hashFiles('./windows-compile-vs.ps1') }}
-          restore-keys: windows-cache-
-
-      - name: Compile PHP
-        run: .\windows-compile-vs.ps1
-        env:
-          SOURCES_PATH: ${{ github.workspace }}\pocketmine-php-sdk
-          PM_VERSION_MAJOR: ${{ inputs.pm-version-major }}
-          PHP_VERSION_BASE: ${{ inputs.php-version-base }}
-
-      - name: Prepare artifacts
-        run: |
-          mkdir temp
-          Compress-Archive -Path .\bin -DestinationPath "PHP-${{ inputs.php-version-base }}-Windows-x64-PM${{ inputs.pm-version-major }}.zip"
-          move php-debug-pack-*.zip temp/Z-PHP-${{ inputs.php-version-base }}-Windows-x64-PM${{ inputs.pm-version-major }}-debugging-symbols.zip
-          move temp\*.zip .
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v5
-        if: always()
-        with:
-          name: PHP-${{ inputs.php-version-base }}-Windows-PM${{ inputs.pm-version-major }}
-          path: |
-            *PHP-${{ inputs.php-version-base }}-Windows-x64-PM${{ inputs.pm-version-major }}*.zip
-            compile.log
-            windows-compile-vs.bat
-          if-no-files-found: error
-
-
   publish:
     name: Publish binaries
-    needs: [linux, windows]
+    needs: [linux]
     runs-on: ubuntu-24.04
     if: ${{ github.ref_name == 'stable' && github.ref_type == 'branch' && !contains(github.event.head_commit.message, '[no release]') }}
     concurrency: release-${{ inputs.php-version-base }}-pm${{ inputs.pm-version-major }}
@@ -193,7 +152,6 @@ jobs:
         with:
           artifacts: |
             ${{ github.workspace }}/*PHP-*-PM*/*.tar.gz
-            ${{ github.workspace }}/*PHP-*-Windows-PM*/*.zip
             ${{ github.workspace }}/*.gdbinit
           name: PM ${{ inputs.pm-version-major }}.x (${{ steps.date.outputs.DATE }}) - Recommended
           tag: pm${{ inputs.pm-version-major }}-latest
