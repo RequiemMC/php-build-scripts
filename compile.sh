@@ -49,7 +49,7 @@ EXT_VANILLAGENERATOR_VERSION="abd059fd2ca79888aab3b9c5070d83ceea55fada"
 # branch name (e.g. "master"), tag, or 40-char commit SHA — the build step
 # below switches between `git checkout` and tarball download accordingly.
 EXT_QUICHE_VERSION="master"
-EXT_MONGODB_VERSION="2.3.1"
+EXT_MONGODB_VERSION="2.3.0"
 
 EXT_IGBINARY_VERSION_PHP85="3.2.17RC1"
 
